@@ -69,13 +69,13 @@ If you don't need both Kosmtik and Tiles server just run them separately.
   * start: `dobi kosmtik-start`
   * stop: `dobi kosmtik-stop`
 * Tiles server
-  * start: `dobi tiles-stop`
+  * start: `dobi tiles-start`
   * stop: `dobi tiles-stop`
   
 ## Volumes
 
 Docker Volumes are pieces of data which are mounted into containers as directories. They are used to make data persistent i.e. to not get it disappeared
-across container runs. Usually they're used either for big or variable data like databases, cache, other resources etc so that one can manage them
+across container runs. Usually they're used either for big or variable data like databases, caches and etc, so that one can manage them
 independently.
 
 This project uses the next volumes:
@@ -84,8 +84,8 @@ This project uses the next volumes:
 * `osmcarto_fonts` - a volume with fonts used by OSM carto.
 * `osmcarto_tiles` - a volume with the tiles server cached tiles.
 
-You don't usually need to know where in the filesystem dockers stores volumes. E.g on Linux it's under `/var/lib/docker/volumes` and on other systems
-it's different. 
+You can list them with `docker volumes ls`. If you don't need the data anymore, first stop the containers if they're running and then remove volumes with 
+`docker volume rm <volume_name>`.  
 
 ## Architecture
 
@@ -95,9 +95,9 @@ Docker configuration is comprised with few `docker-compose.*.yml` files and one 
 
 This setup uses three Docker Compose files:
 
-* `docker-compose.db.yml` - defines PostGIS database container
-* `docker-compose.kosmtik.yml` - defines Kosmtik container
-* `docker-compose.tiles.yml` - defines Tiles container
+* `docker-compose.db.yml` - declares PostGIS database container
+* `docker-compose.kosmtik.yml` - declares Kosmtik container
+* `docker-compose.tiles.yml` - declares Tiles container
 
 **NOTE:** You don't need to run `docker-compose` tool manually as its files are used internally by Dobi.
 
@@ -109,7 +109,9 @@ You run Dobi tasks as simple as:
 ```
 $ dobi <task>
 ```
-where `task` is the name of a *resource* which is usually a job or an alias. This is the list of all jobs and aliases defined in this project: 
+where `task` is the name of a *resource* which is usually a job or an alias. To learn more about Dobi check out its [documentation](https://dnephin.github.io/dobi/).
+
+Here is the list of all jobs and aliases defined in this project: 
 
 * Jobs
   * `shapefiles` - downloads and indexes shapefiles of world boundaries
