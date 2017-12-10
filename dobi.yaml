@@ -1,0 +1,169 @@
+meta:
+    project: osmcarto
+    default: start
+
+# JOBS
+
+job=shapefiles:
+    use: i-shapefiles
+    mounts: [m-root]
+    interactive: true
+    annotations:
+        description: 'Downloads and builds world boundaries and other global shapefiles'
+
+job=fonts:
+    use: i-fonts
+    mounts: [m-fonts]
+    interactive: true
+    annotations:
+        description: 'Downloads fonts used by osm-carto'
+
+job=import:
+    use: i-import
+    mounts: [m-root]
+    interactive: true
+    net-mode: '{project}_default'
+    depends: [c-db]
+    env:
+        - PGHOST=db
+        - PGUSER=postgres
+        - PG_WORK_MEM
+        - PG_MAINTENANCE_WORK_MEM
+        - OSM2PGSQL_CACHE
+        - OSM2PGSQL_NUMPROC
+        - OSM2PGSQL_DATAFILE=data.osm.pbf
+    annotations:
+        description: 'Imports OSM data into the database'
+
+job=compile:
+    use: i-carto
+    mounts: [m-root]
+    interactive: true
+    annotations:
+        description: 'Compiles project.mml into style.xml used by mapnik/renderd'
+
+# ALIASES
+
+alias=init:
+    tasks: ['build', 'shapefiles', 'fonts', 'import']
+    annotations:
+        description: 'Builds, fetches and initializes resources'
+
+alias=build:
+    tasks: ['i-carto', 'i-fonts', 'i-import', 'i-shapefiles', 'i-db', 'i-kosmtik', 'i-tiles']
+    annotations:
+        description: 'Builds all docker images'
+
+alias=start:
+    tasks: ['kosmtik-start', 'tiles-start']
+    annotations:
+        description: 'Runs Kosmtik and tiles server'
+
+alias=stop:
+    tasks: ['c-kosmtik:down', 'c-tiles:down', 'c-db:down']
+    annotations:
+        description: 'Stops tiles server'
+
+alias=kosmtik-start:
+    tasks: ['c-kosmtik:detach']
+    annotations:
+        description: 'Runs Kosmtik'
+
+alias=kosmtik-stop:
+    tasks: ['c-kosmtik:down', 'c-db:down']
+    annotations:
+        description: 'Stops Kosmtik'
+
+alias=tiles-start:
+    tasks: ['c-tiles:detach']
+    annotations:
+        description: 'Runs tiles server'
+
+alias=tiles-stop:
+    tasks: ['c-tiles:down', 'c-db:down']
+    annotations:
+        description: 'Stops tiles server'
+
+# SERVICES
+
+compose=c-db:
+    files: [docker-compose.db.yml]
+    project: '{project}'
+
+compose=c-kosmtik:
+    files: [docker-compose.kosmtik.yml]
+    project: '{project}'
+    depends: ['c-db:detach']
+
+compose=c-tiles:
+    files: [docker-compose.tiles.yml]
+    project: '{project}'
+    depends: ['c-db:detach']
+
+# MOUNTS
+
+mount=m-root:
+    bind: ../
+    path: /openstreetmap-carto
+
+mount=m-fonts:
+    name: '{project}_fonts'
+    path: /usr/share/fonts
+
+# IMAGES
+
+image=i-base:
+    image: base
+    tags: ['osmcarto']
+    context: images/base
+
+image=i-carto:
+    image: base_carto
+    tags: ['osmcarto']
+    context: images/base_carto
+    args:
+        APP_UID: '{user.uid}'
+    depends: [i-base]
+
+image=i-fonts:
+    image: base_fonts
+    tags: ['osmcarto']
+    context: images/base_fonts
+    depends: [i-base]
+
+image=i-import:
+    image: base_import
+    tags: ['osmcarto']
+    context: images/base_import
+    args:
+        APP_UID: '{user.uid}'
+    depends: [i-base]
+
+image=i-shapefiles:
+    image: base_shapefiles
+    tags: ['osmcarto']
+    context: images/base_shapefiles
+    args:
+        APP_UID: '{user.uid}'
+    depends: [i-base]
+
+image=i-db:
+    image: db
+    tags: ['osmcarto']
+    context: images/db
+
+image=i-kosmtik:
+    image: base_kosmtik
+    tags: ['osmcarto']
+    context: images/base_kosmtik
+    args:
+        APP_UID: '{user.uid}'
+    depends: [i-base]
+
+image=i-tiles:
+    image: base_tiles
+    tags: ['osmcarto']
+    context: images/base_tiles
+    args:
+        APP_UID: '{user.uid}'
+    depends: [i-base]

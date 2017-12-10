@@ -1,0 +1,24 @@
+version: '3.2'
+
+services:
+
+  tiles:
+    image: base_tiles:osmcarto
+    volumes:
+      - ../:/openstreetmap-carto
+      - fonts:/usr/share/fonts
+      - tiles:/var/lib/mod_tile
+    ports:
+      - "8097:80"
+    environment:
+      - PGHOST=db
+      - PGUSER=postgres
+
+volumes:
+  fonts:
+  tiles:
+
+networks:
+  default:
+    external:
+      name: osmcarto_default

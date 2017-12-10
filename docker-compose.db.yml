@@ -1,0 +1,14 @@
+version: '3.2'
+
+services:
+
+  db:
+    image: db:osmcarto
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - PG_WORK_MEM
+      - PG_MAINTENANCE_WORK_MEM
+
+volumes:
+  db:

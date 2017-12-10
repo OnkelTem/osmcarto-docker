@@ -1,0 +1,22 @@
+version: '3.2'
+
+services:
+
+  kosmtik:
+    image: base_kosmtik:osmcarto
+    volumes:
+      - ../:/openstreetmap-carto
+      - fonts:/usr/share/fonts
+    ports:
+      - "6789:6789"
+    environment:
+      - PGHOST=db
+      - PGUSER=postgres
+
+volumes:
+  fonts:
+
+networks:
+  default:
+    external:
+      name: osmcarto_default
