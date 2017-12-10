@@ -72,21 +72,6 @@ If you don't need both Kosmtik and Tiles server just run them separately.
   * start: `dobi tiles-start`
   * stop: `dobi tiles-stop`
   
-## Volumes
-
-Docker Volumes are pieces of data which are mounted into containers as directories. They are used to make data persistent i.e. to not get it disappeared
-across container runs. Usually they're used either for big or variable data like databases, caches and etc, so that one can manage them
-independently.
-
-This project uses the next volumes:
-
-* `osmcarto_db` - a volume with PostGIS database.
-* `osmcarto_fonts` - a volume with fonts used by OSM carto.
-* `osmcarto_tiles` - a volume with the tiles server cached tiles.
-
-You can list them with `docker volumes ls`. If you don't need the data anymore, first stop the containers if they're running and then remove volumes with 
-`docker volume rm <volume_name>`.  
-
 ## Architecture
 
 Docker configuration is comprised with few `docker-compose.*.yml` files and one `dobi.yaml` file.
@@ -127,3 +112,19 @@ Here is the list of all jobs and aliases defined in this project:
   * `tiles-stop` - Stops tiles server
   * `start` - Runs both Kosmtik and tiles server (this is also the default Dobi action which executes when you run `dobi` without parameters) 
   * `stop` - Stops both Kosmtik and tiles server
+
+## Volumes
+
+Docker Volumes are pieces of data which are mounted into containers as directories. They are used to make data persistent i.e. to not get it disappeared
+across container runs. Usually they're used either for big or variable data like databases, caches and etc, so that one can manage them
+independently.
+
+This project uses the next volumes:
+
+* `osmcarto_db` - a volume with PostGIS database.
+* `osmcarto_fonts` - a volume with fonts used by OSM carto.
+* `osmcarto_tiles` - a volume with the tiles server cached tiles.
+
+You can list them with `docker volume ls`. If you don't need some data anymore, first stop the corresponding containers if they're running (i.e. stop dobi tasks) 
+and then remove the volume with `docker volume rm <volume_name>`.  
+
