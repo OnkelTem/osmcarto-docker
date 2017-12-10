@@ -12,9 +12,7 @@ and [Dobi](https://dnephin.github.io/dobi/).
 * [Install Docker Compose](https://docs.docker.com/compose/install/)
 * [Install Dobi](https://dnephin.github.io/dobi/install.html)
 
-## Quick start
-
-### Get sources
+## Get sources
  
 Download openstreetmap-carto release or just grab the latest sources and switch to the fetched directory:
 
@@ -29,41 +27,32 @@ Clone this project into `docker` subdirectory:
 $ git clone https://github.com/OnkelTem/osmcarto-docker.git docker
 ```
 
-### Get OSM data
+## Get OSM data
 
 Download OSM data of your interest in osm.pbf format to a file `data.osm.pbf` and place it within your `openstreetmap-carto` directory.
 
 *@Todo: Automate getting and updating OSM data.*
 
-### Run (all-in-one)
+## Initialize
 
-To get everything built and running just type:
+To pull and build all required Docker images, download fonts, shapefiles, initialize the database and import OSM data into it run: 
 ```
-$ dobi start
+$ dobi init
 ```
-It will pull and build all required Docker images, download fonts, shapefiles, initialize the database and import OSM data into it 
-and finally run both Kosmtik and Tiles server (renderd/mod_tile/apache).
+This step is really time consuming so you can do something else in the meantime. 
 
-Optionally you can first run the building process separately:
+## Run
+
+When it's ready you can now run both Kosmtik and tiles server with:
 ```
-$ dobi build
+dobi start
 ```
-which is a wise thing to do, as it takes a while to download and build everything so you can do something else in the meantime.
-Afterwards running `dobi start` will immediately start the containers.
-
-You can now browse to [http://localhost:6789](http://localhost:6789) to view the output of Kosmtik.
-
-Tiles server receives requests on [http://localhost:8097](http://localhost:8097) which you can use as a base uri for [QGis](https://www.qgis.org) 
-or other software. Also, opening this URL in browser will load simple page for viewing OSM map.
-
-To stop it anytime just type:
+To stop them anytime just type:
 ```
 $ dobi stop
 ```
 
-### Running Kosmtik/Tiles server separately
-
-If you don't need both Kosmtik and Tiles server just run them separately.
+Or you can run Kosmtik and Tiles server separately:
 
 * Kosmtik
   * start: `dobi kosmtik-start`
@@ -71,7 +60,12 @@ If you don't need both Kosmtik and Tiles server just run them separately.
 * Tiles server
   * start: `dobi tiles-start`
   * stop: `dobi tiles-stop`
-  
+
+You can browse to [http://localhost:6789](http://localhost:6789) to view the Kosmtik output.
+
+Tiles server receives requests on [http://localhost:8097](http://localhost:8097) which you can use as a base uri for [QGis](https://www.qgis.org) 
+or other software. Also, opening this URL in browser will load simple page for viewing OSM map.
+
 ## Architecture
 
 Docker configuration is comprised with few `docker-compose.*.yml` files and one `dobi.yaml` file.
