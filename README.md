@@ -61,9 +61,8 @@ Or you can run Kosmtik and Tiles server separately:
   * start: `dobi tiles-start`
   * stop: `dobi tiles-stop`
 
-You can browse to [http://localhost:6789](http://localhost:6789) to view the Kosmtik output.
-
-Tiles server receives requests on [http://localhost:8097](http://localhost:8097) which you can use as a base uri for [QGis](https://www.qgis.org) 
+Browse to [http://localhost:6789](http://localhost:6789) to view the Kosmtik output. The tiles server receives requests 
+on [http://localhost:8097](http://localhost:8097) which you can use as a base uri for [QGis](https://www.qgis.org) 
 or other software. Also, opening this URL in browser will load simple page for viewing OSM map.
 
 ## Architecture
